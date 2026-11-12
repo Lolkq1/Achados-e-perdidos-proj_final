@@ -1,5 +1,6 @@
 body, html {
     min-width: 100vh;
+    overflow-x: hidden;
 }
 
 .main, .main2 {

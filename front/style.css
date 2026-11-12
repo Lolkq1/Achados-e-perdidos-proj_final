@@ -1,5 +1,6 @@
-body{
-    background-color:gray;
+body, html {
+    min-width: 100vh;
+    overflow-x: hidden;
 }
 
 #divPai{
