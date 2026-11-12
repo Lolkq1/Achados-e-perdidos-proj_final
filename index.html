@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "style.css">
+    <title>Cadastro de Objetos</title>
+</head>
+<body>
+    <div id = "divPai">
+        <h1>Cadastrar Novo Objeto</h1>
+        <form>
+            <h3>Status do Registro</h3>
+            <div id = "objeto">
+                <input type ="radio" id ="perdido" name = "status" value = "perdido">
+                <label for ="perdido">Objeto Perdido</label>
+
+                <input type ="radio" id ="achado" name = "status" value = "achado">
+                <label for ="achado">Objeto Achado</label>
+            </div>
+
+            <h3>Informações do Objeto</h3>
+           <div class = "linha-dupla">
+            <div class = "coluna">
+                <label for ="titulo">Titulo (Nome do Item)</label>
+                <input type ="text" id ="titulo" name ="titulo" placeholder="Digite o nome do objeto">
+            </div>
+
+             <div class = "coluna">
+                <label for = "categoria">Categoria</label>
+                <select id ="categoria" name ="categoria">
+                    <option value = "eletronica">Eletrônica</option>  
+                    <option value = "chaves">Chaves</option>  
+                    <option value = "documentos">Documentos</option>  
+                    <option value = "roupas">Roupas</option>  
+                    <option value = "outros">Outros</option>  
+                </select>
+            </div>
+            </div>
+               <h3>Local e Data</h3>
+               <div class = "row">
+            <div class = "column">
+                <label for ="data">Data do Ocorrido</label>
+                <input type ="datetime-local" id = "data" name ="data">
+            </div>
+            <div class = "column">
+                <label for ="local">Local onde foi Perdido/Achado</label>
+                <input type ="text" id ="local" name ="local" placeholder="Descreva o local">
+            </div>
+            </div>
+            <h3>Etiquetas</h3>
+            <div class = "divEtqMae">
+            <div class = "Etq">
+                <label for ="cor">Cor</label>
+                <input type = "text" id ="cor" name ="cor" placeholder="Ex: Preto, Azul, Vermelho">
+            </div>
+            <div class = "Etq">
+                 <label for ="marca">Marca</label>
+                <input type = "text" id ="marca" name ="marca" placeholder="Ex: Nike, Samsung">
+            </div>
+            <div class = "Etq">
+                 <label for ="material">Material</label>
+                <input type = "text" id ="material" name ="material" placeholder="Ex: Plástico">
+            </div>
+            </div>
+            <div class = "descriçao">
+                <label for ="descricao">Descrição Detalhada</label>
+                <textarea id ="descricao" name="descricao" rows="4" cols="30"></textarea>
+            </div>
+            <button type ="submit" class = "botao">Cadastrar</button>
+        </form>
+    </div>
+</body>
+</html>
