@@ -1,0 +1,33 @@
+body, html {
+    min-width: 100vh;
+}
+
+.main, .main2 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 5px;
+    width: 700px;
+    height: 390px;
+    box-shadow: 0 0 5px;
+}
+
+
+#main-title {
+    font-size: 30px;
+
+}
+
+.main2 {
+    height: 650px;
+}
+
+#card_solicitacoes {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 700px;
+    height: 650px;
+}
