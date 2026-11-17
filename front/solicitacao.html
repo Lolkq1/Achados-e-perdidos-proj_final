@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" style="position: relative; left: 70%;">
                 <div class="navbar-nav">
                     <a href="" class="nav-item nav-link disabled">joaozinhodobiu123@gmail.com</a>
-                    <a href="" class="nav-item nav-link">Sair</a>
+                    <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
                 </div>
             </div>
         </nav>
@@ -50,12 +50,25 @@
             <textarea type="password" id="descricao" style="display: block; width: 90%; height: 200px"></textarea>
             <button class="btn btn-success my-3" id="btn">Salvar</button>
             <button class="btn btn-primary my-3" id="btn_sair">
-                <a href="/listagem_solicitacoes" style="text-decoration: none; color: white;">Voltar</a>
+                <a href="/solicitacoes_devolucao.html" style="text-decoration: none; color: white;">Voltar</a>
             </button>
         </div>
     </form>
     </div>
     </div>
-    
+    <script>          
+            const btn = document.querySelector("#sair_btn")
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault()
+                let a = await fetch('/api/user/logout')
+                let b = await a.text()
+                let c = await JSON.parse(b)
+                alert(c.msg)
+                if (a.ok) {
+                    document.location.href='/login.html'
+                }
+            })
+            
+        </script>
 </body>
 </html>
