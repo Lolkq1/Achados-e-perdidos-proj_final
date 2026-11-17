@@ -6,5 +6,5 @@ Edison Camilo (PWEB)
 
 Integrantes: <br>
 Vitor Gabriel Silva Guimarães - Responsável pelo cadastro dos locais <br>
-Rodrigo Araújo Costa - Responsável pelo cadastro dos objetos <br>
-Luiz Davi dos Santos Silva - Responsável pelo cadastro das solicitações de devolução <br>
+Rodrigo Araújo Costa - Responsável pelo cadastro dos objetos, etiquetas e categorias <br>
+Luiz Davi dos Santos Silva - Responsável pelo cadastro das solicitações de devolução e de usuário<br>
