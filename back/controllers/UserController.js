@@ -21,7 +21,7 @@ async function login(req, res, next) {
             path: '/',
             maxAge: 1000*60*60*48
         })
-        return res.send("Usuário logado!")
+        return res.json({msg: 'Usuário logado!', tipo: user.tipo})
     } catch(err) {
         console.log(err.cause, err.message)
         return res.status(err.cause).json({msg: err.message})
@@ -44,7 +44,7 @@ async function signup(req, res, next) {
             path: '/',
             maxAge: 1000*60*60*48
         })
-        res.status(201).json({msg: 'usuário criado com sucesso!'})
+        res.status(201).json({msg: 'usuário criado com sucesso!', tipo: tipo})
     } catch(err) {
         return res.status(err.cause).json({msg: err.message})
     }

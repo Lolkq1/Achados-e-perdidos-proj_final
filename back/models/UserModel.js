@@ -1,10 +1,10 @@
 const pool = require('../db')
 const bcrypt = require('bcrypt')
-async function insertUser(nome, email, senha) {
+async function insertUser(nome, email, senha, tipo) {
     try {
        let bcrypt = require('bcrypt')
        let hash = await bcrypt.hash(senha, 10)
-       let [newUser] = await pool.execute("INSERT INTO usuario (nome, email, senha) VALUES (?,?,?)", [nome, email, hash])
+       let [newUser] = await pool.execute("INSERT INTO usuario (nome, email, senha, tipo) VALUES (?,?,?,?)", [nome, email, hash, tipo])
        return newUser.insertId
     } catch(err) {
         if (err.errno == 1062) {

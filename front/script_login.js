@@ -13,11 +13,25 @@ btn.addEventListener("click", async (e) => {
             'content-type':'application/json'
         }
     })
-    if (a.ok) {
-        document.location.href = '/inicial.html'
-    } else {
+    
     let b = await a.text()
     let c = await JSON.parse(b)
     alert(c.msg)
-    }
+                if (a.ok) {
+                    switch(c.tipo) {
+                        case 'comum':
+                            document.location.href='/inicial.html'
+                            break;
+                        case 'admin':
+                            document.location.href='/painel_admin.html'
+                            break;
+                        case 'entregador': 
+                            document.location.href='/painel_entregador.html'
+                            break;
+                        default: 
+                            document.location.href='/inicial.html'
+                            break
+                    }
+                }
+    
 })
