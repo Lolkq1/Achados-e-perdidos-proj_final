@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const model = require('../models/UserModel')
 const jwt = require('jsonwebtoken')
-async function login(req, res, next) {
+async function login(req, res) {
+    console.log(req)
     let {email, senha} = req.body
     try {
         let user = await model.getUserByEmail(email)
@@ -28,7 +29,7 @@ async function login(req, res, next) {
     }
 }
 
-async function signup(req, res, next) {
+async function signup(req, res) {
     let {nome, email, senha, tipo} = req.body 
     try {
         let userid = await model.insertUser(nome, email, senha, tipo)
@@ -50,7 +51,7 @@ async function signup(req, res, next) {
     }
 }
 
-async function logout(req, res, next) {
+async function logout(req, res) {
     res.clearCookie("sessionToken")
     return res.json({msg: "Logout concluido!"})
 }

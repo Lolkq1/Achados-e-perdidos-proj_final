@@ -24,16 +24,16 @@ btn.addEventListener("click", async (e) => {
         if (a.ok) {
             switch(c.tipo) {
                     case 'comum':
-                        document.location.href='/inicial.html'
+                        document.location.href='u/inicial'
                         break;
                     case 'admin':
-                        document.location.href='/painel_admin.html'
+                        document.location.href='u/painel_admin'
                         break;
                     case 'entregador': 
-                        document.location.href='/painel_entregador.html'
+                        document.location.href='u/painel_entregador'
                         break;
                     default: 
-                        document.location.href='/inicial.html'
+                        document.location.href='u/inicial'
                         break;
                     }
                 }

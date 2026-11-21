@@ -1,17 +1,23 @@
 const jwt = require('jsonwebtoken')
 const model = require('../models/UserModel')
 async function auth(req, res, next) {
+    console.log('tauves tenha')
     if (!req.cookies.sessionToken) {
-        return res.redirect('/login.html')
+        console.log('n tem')
+        return res.redirect('/i/login')
     }
     try {
-        let ver = jwt.verify(req.cookies.sessionToken, process.env.secretkey)
+        console.log('tem mas tem q ve')
+        let ver = jwt.verify(req.cookies.sessionToken, process.env.privatekey)
+        console.log('um')
         let user = await model.getUserById(parseInt(ver.sub))
+        console.log('dos')
         res.locals.user = user
         return next()
     } catch(err) {
+        console.log(err)
         res.clearCookie('sessionToken')
-        return res.redirect('/login.html')
+        return res.redirect('/i/login')
     }
 }
 
@@ -20,18 +26,20 @@ async function reverseAuth(req, res, next) {
         return next()
     }
     try {
-        let ver = jwt.verify(req.cookies.sessionToken, process.env.secretkey)
+        let ver = jwt.verify(req.cookies.sessionToken, process.env.privatekey)
         let u = await model.getUserById(parseInt(ver.sub))
         switch (u.tipo) {
             case 'comum':
-                return res.redirect('/tela_inicial.html')
+                return res.redirect('/u/inicial')
             case 'entregador':
-                return res.redirect('/painel_entregador.html')
+                return res.redirect('/u/painel_entregador')
             case 'admin':
-                return res.redirect('/painel_admin.html')
+                return res.redirect('/u/painel_admin')
         }
     } catch(err) {
         res.clearCookie('sessionToken')
         return next()
     }
 }
+
+module.exports = {auth, reverseAuth}

@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
-    <link rel="stylesheet" href="style3.css">
-    <script src="script_login.js" defer></script>
+    <link rel="stylesheet" href="../style3.css">
+    <script src="/i/script_login.js" defer></script>
 </head>
 <body >
-    <img src="images3.jpg" style="background-color: black; overflow: hidden;" id="bgimghf2" alt="">
+    <img src="../images3.jpg" style="background-color: black; overflow: hidden;" id="bgimghf2" alt="">
     <div id="main3" class="d-flex">
         <div id="half">
             <div id="container" class="m-5" style="left: 50%; top: 50%; position: absolute; transform: translate(-50%,-50%);">
-                <img src="achados-e-perdidos.png" style="position: relative; left: 50%; transform: translate(-50%,-20%); " width="250px" height="250px" alt="">
+                <img src="../achados-e-perdidos.png" style="position: relative; left: 50%; transform: translate(-50%,-20%); " width="250px" height="250px" alt="">
                 <h1 style="color: rgb(255, 255, 255); left: 50%; top: 50%; position: relative; transform: translate(-50%,-50%);">Achados e Perdidos</h1>
                 <h3 style="color: rgb(255, 255, 255); left: 63%; top: 50%; position: relative; transform: translate(-50%,-50%);">Bem-vindo de volta!</h3>
             </div>
             
         </div>
         <div id="half2">
-            <form action="/login" method="post" class="main4">
+            <form action="/api/user/login" method="post" class="main4">
         <div class="form-group mx-3 my-3">
             <label class="my-2" for="email" style="display: block; color: white; text-shadow: 0 0 3px white;">Email</label>
             <input type="text" id="email" style="display: block; background-color: rgba(0,0,0,0.5); border: 0cap; color: white;">
@@ -29,7 +29,7 @@
             <label class="my-2" for="senha" style="display: block; color: white; text-shadow: 0 0 3px white;">Senha</label>
             <input type="password" id="senha" style="display: block; background-color: rgba(0,0,0,0.5); border: 0cap; color: white;">
             <button class="btn btn-success my-3" style="background-color: rgba(0,0,0,0.5); border: white;" id="btn">Entrar</button>
-            <p class="form-text" style="color: white;">Ainda não possui uma conta? <a style="text-decoration: none; color: white; text-shadow: 0 0 4px rgb(0, 140, 255);" href="/cadastro.html">Cadastre-se</a></p>
+            <p class="form-text" style="color: white;">Ainda não possui uma conta? <a style="text-decoration: none; color: white; text-shadow: 0 0 4px rgb(0, 140, 255);" href="cadastro">Cadastre-se</a></p>
             <a href="" class="form-text" style="color: white;">Esqueci minha senha</a>
         </div>
     </form>
