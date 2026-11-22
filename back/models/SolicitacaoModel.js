@@ -1,9 +1,20 @@
-const db = require('../db')
+const res = require('express/lib/response')
+const pool = require('../db')
 
-async function insertSolicitacao(uid, turno, desc) {
+async function insertSolicitacao(uid, turno, desc, date, loc) {
     try {
-        let [sol] = await pool.execute('INSERT INTO solicitacao (id_usuario, turno, descricao_solicitante) VALUES (?,?,?)', [uid, turno, desc])
+        let sol = await pool.execute('INSERT INTO solicitacao (id_usuario, turno, descricao_solicitante, data_perdido, id_local) VALUES (?,?,?,?,?)', [uid, turno, desc, date, loc])
         return sol.resultId
+    } catch(err) {
+        console.log(err)
+        throw new Error("erro interno do servidor", {cause: 500})
+    }
+}
+
+async function deleteSolicitacao(id) {
+    try {
+        await pool.execute('DELETE FROM solicitacao WHERE id=?', [id])
+        return
     } catch(err) {
         throw new Error("erro interno do servidor", {cause: 500})
     }
@@ -56,31 +67,41 @@ async function setObjetoSolicitacao(id, id_objeto) {
     }
 }
 
-async function getSolicitacoesByUserId(id, limit, ordem) {
+async function getSolicitacoesByUserId(uid, limit, ordem, pag) {
     if (!limit) {
-        limit = 0
+        limit = 5
     }
     if (!ordem) {
         ordem = 'DESC'
     }
+    if (!pag) {
+        pag = 1
+    }
     try {
-        let [sols] = await pool.execute(`SELECT * FROM solicitacao WHERE id_usuario=? LIMIT ? ORDER BY ${ordem}`,[id, limit])
-        return sols[0]
+        let [sols] = await pool.execute(`select s.*, e.email as email_entregador from solicitacao as s LEFT JOIN usuario as e ON s.responsavel_entrega = e.id WHERE s.id_usuario=? ORDER BY s.id DESC limit ? OFFSET ?`, [uid, limit, (pag-1)*limit])
+        return sols
     } catch(err) {
+        console.log(err)
         throw new Error('erro interno do servidor', {cause: 500})
     }
 }
 
-async function getSolicitacoes(limit, ordem) {
+
+async function getSolicitacoes(limit, ordem, pag) {
     if (!limit) {
         throw new Error('limite (sql display) não informado.', {cause: 422})
     }
     if (!ordem) {
         ordem = 'DESC'
     }
+    if (!pag) {
+        throw new Error('pagina (sql display) não informado.', {cause: 422})
+    }
     try {
-        let [sols] = await pool.execute(`select * from solicitacao limit ? ORDER BY ${ordem}`, [limit])
-        return sols[0]
+        let [sols] = await pool.execute(`select s.*, u.email as email_solicitante, e.email as email_entregador from solicitacao 
+            as s JOIN usuario as u ON s.id_usuario = u.id LEFT JOIN usuario as e ON s.responsável_entrega=e.id ORDER BY s.id ${ordem} limit ? 
+            offset ?`, [limit, pag*limit])
+        return sols
     } catch (err) {
         throw new Error('erro interno do servidor', {cause: 500})
     }
@@ -88,4 +109,4 @@ async function getSolicitacoes(limit, ordem) {
 
 
 
-module.exports = {alterarStatusSolicitacao, getSolicitacaoById, insertSolicitacao, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoes, getSolicitacoesByUserId}
+module.exports = {deleteSolicitacao, alterarStatusSolicitacao, getSolicitacaoById, insertSolicitacao, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoes, getSolicitacoesByUserId}

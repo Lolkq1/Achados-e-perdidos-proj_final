@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local do Achados e Perdidos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style2.css">
+</head>
+<body>
+    <div class="d-flex">
+        <div>
+            <nav class="bg-dark text-white p-3 min-vh-100" style="width: 250px;">
+            <h4 class="mb-4">Achados e Perdidos</h4>
+            <div class="nav flex-column">
+                <a class="nav-link text-white" href="/u/objeto">Objetos</a>
+                <a class="nav-link text-white" href="/u/local">Locais</a>
+                <a class="nav-link text-white bg-success rounded" href="/u/solicitacoes">Solicitações</a>
+            </div>
+        </nav>
+        </div>
+        <div class="d-flex flex-column">
+            <div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light min-vw-100" style="height: 50px;">
+                <div class="collapse navbar-collapse" style="position: relative; left: 70%;">
+                    <div class="navbar-nav">
+                        <a href="" class="nav-item nav-link disabled">joaozinhodobiu123@gmail.com</a>
+                        <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
+                    </div>
+                </div>
+                </nav>
+            </div>
+            <div>
+            <div class="flex-grow-1 p-4">
+            <h2>Locais Cadastrados</h2>
+            <button type="button" class="btn btn-success mb-3" onclick="document.location.href='/u/solicitacao'">+ Nova solicitação</button>
+            <table class="table w-75" style="border-right: solid 2px black;">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Situação</th>
+                        <th>data (perdido)</th>
+                        <th>data (entrega)</th>
+                        <th>Email do entregador</th>
+                        <th>Descrição</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <% sols.forEach(sol => { %>
+                    <tr> 
+                        <td><%=sol.id %></td>
+                        <td><%=sol.status %></td>
+                        <td><%=sol.data_perdido %></td>
+                        <td><%=sol.data_entrega %></td>
+                        <td><%=sol.email_entregador %></td>
+                        <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target='#modal<%=sol.id %>'>Expandir</button></td>
+                        <td> <button class="btn btn-danger" onclick="fetch('/api/solicitacao/<%=sol.id %>', {method: 'DELETE'}).then(res => res.text()).then(obj => JSON.parse(obj)).then(obj2 => {alert(obj2.msg); window.location.reload()})">Remover</button> </td>
+                   </tr>
+                   <% }) %>
+                </tbody>
+            </table>
+            <button class="btn btn-secondary" style="position: absolute; top: 67%; left: 14.2%;" onclick="document.location.href='/u/solicitacoes/<%=sols[0].id_usuario %>?pag=<%=pag-1 %>'"><</button>
+            <button class="btn btn-secondary" style="position: absolute; top: 67%; left: 17%;" onclick="document.location.href='/u/solicitacoes/<%=sols[0].id_usuario %>?pag=<%=pag+1 %>'">></button>
+        </div>
+        <% sols.forEach((sol) => { %>
+            <div class="modal fade" id='modal<%=sol.id %>' tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Descrição</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <p class=""><%= sol.descricao_solicitante %></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                
+            </div>
+            </div>
+    <% }) %>
+            
+        </div>
+    </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>          
+            const btn = document.querySelector("#sair_btn")
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault()
+                let a = await fetch('/api/user/logout')
+                let b = await a.text()
+                let c = await JSON.parse(b)
+                alert(c.msg)
+                if (a.ok) {
+                    document.location.href='/i/login'
+                }
+            })
+            
+        </script>
+</body>
+</html>

@@ -1,18 +1,15 @@
 const jwt = require('jsonwebtoken')
 const model = require('../models/UserModel')
 async function auth(req, res, next) {
-    console.log('tauves tenha')
     if (!req.cookies.sessionToken) {
-        console.log('n tem')
         return res.redirect('/i/login')
     }
     try {
-        console.log('tem mas tem q ve')
         let ver = jwt.verify(req.cookies.sessionToken, process.env.privatekey)
-        console.log('um')
         let user = await model.getUserById(parseInt(ver.sub))
-        console.log('dos')
+
         res.locals.user = user
+        console.log(user)
         return next()
     } catch(err) {
         console.log(err)
