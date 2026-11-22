@@ -5,6 +5,6 @@ Tamer Cavalcante (POO) <br>
 Edison Camilo (PWEB) 
 
 Integrantes: <br>
-Vitor Gabriel Silva Guimarães - Responsável pelo cadastro dos locais <br>
-Rodrigo Araújo Costa - Responsável pelo cadastro dos objetos, etiquetas e categorias <br>
+Vitor Gabriel Silva Guimarães - Responsável pelo cadastro dos locais e categorias <br>
+Rodrigo Araújo Costa - Responsável pelo cadastro dos objetos e etiquetas <br>
 Luiz Davi dos Santos Silva - Responsável pelo cadastro das solicitações de devolução e de usuário<br>
