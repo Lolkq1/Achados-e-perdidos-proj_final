@@ -110,7 +110,8 @@ async function dynamicSolicitacoes(req, res) {
         }
         return res.render('authNeeded/minhas_solicitacoes_devolucao.ejs', {
             sols: sols,
-            pag: pag
+            pag: pag,
+            usuario: res.locals.user.email
         })
     } catch(err) {
             console.log(err)
