@@ -11,109 +11,180 @@
     <div class="d-flex">
         <div>
             <nav class="bg-dark text-white p-3 min-vh-100" style="width: 250px;">
-            <h4 class="mb-4">Achados e Perdidos</h4>
-            <div class="nav flex-column">
-                <a class="nav-link text-white" href="/u/objeto">Objetos</a>
-                <a class="nav-link text-white bg-success rounded" href="/u/local">Locais</a>
-                <a class="nav-link text-white" href="/u/solicitacoes/">Solicitações</a>
-            </div>
-        </nav>
-        </div>
-        <div class="d-flex flex-column">
-            <div>
-                <nav class="navbar navbar-expand-lg navbar-light bg-light min-vw-100" style="height: 50px;">
-                <div class="collapse navbar-collapse" style="position: relative; left: 70%;">
-                    <div class="navbar-nav">
-                        <a href="" class="nav-item nav-link disabled">joaozinhodobiu123@gmail.com</a>
-                        <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
-                    </div>
+                <h4 class="mb-4">Achados e Perdidos</h4>
+                <div class="nav flex-column">
+                    <a class="nav-link text-white" href="/u/objeto">Objetos</a>
+                    <a class="nav-link text-white bg-success rounded" href="/u/local">Locais</a>
+                    <a class="nav-link text-white" href="/u/solicitacoes/">Solicitações</a>
                 </div>
+            </nav>
+        </div>
+
+        <div class="d-flex flex-column flex-grow-1">
+            <div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 50px;">
+                    <div class="collapse navbar-collapse justify-content-end pe-4">
+                        <div class="navbar-nav">
+                            <a href="" class="nav-item nav-link disabled">Usuário Logado</a>
+                            <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
+                        </div>
+                    </div>
                 </nav>
             </div>
-            <div>
+
             <div class="flex-grow-1 p-4">
-            <h2>Locais Cadastrados</h2>
-            <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalLocal">+ Novo Local</button>
-            <table class="table">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome do Local</th>
-                        <th>Bloco</th>
-                        <th>Ações</th>
-                        <th>Filtro(simbolo)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Entrada Principal</td>
-                        <td>Bloco de Informatica</td>
-                        <td>
-                            <button type="button" class="btn btn-success">Atualizar</button>
-                            <button type="button" class="btn btn-danger">Remover</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>SANE</td>
-                        <td>Bloco Principal</td>
-                        <td>
-                            <button type="button" class="btn btn-success">Atualizar</button>
-                            <button type="button" class="btn btn-danger">Remover</button>
-                        </td>
-                    </tr>    
-                    <tr>
-                        <td>3</td>
-                        <td>Biblioteca</td>
-                        <td>Bloco de Química</td>
-                        <td>
-                            <button type="button" class="btn btn-success">Atualizar</button>
-                            <button type="button" class="btn btn-danger">Remover</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="modal fade" id="modalLocal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Cadastrar</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Local</label>
-                            <input type="text" class="form-control">
+                <h2>Locais Cadastrados</h2>
+                <button type="button" class="btn btn-success mb-3" onclick="abrirModalCriar()">+ Novo Local</button>
+
+                <table class="table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome do Local</th>
+                            <th>Bloco</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-locais"></tbody>
+                </table>
+            </div>
+
+            <div class="modal fade" id="modalLocal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-titulo">Cadastrar Local</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Bloco</label>
-                            <input type="text" class="form-control">
+                        <div class="modal-body">
+                            <form id="form-local">
+                                <input type="hidden" id="local-id">
+
+                                <div class="mb-3">
+                                    <label class="form-label">Local (Nome)</label>
+                                    <input type="text" class="form-control" id="input-nome" placeholder="Ex: Biblioteca" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Bloco</label>
+                                    <input type="text" class="form-control" id="input-bloco" placeholder="Ex: Bloco Principal" required>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-success" onclick="salvarLocal()">Salvar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-            </div>
-        </div>
-    </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script>          
-            const btn = document.querySelector("#sair_btn")
-            btn.addEventListener('click', async (e) => {
-                e.preventDefault()
-                let a = await fetch('/api/user/logout')
-                let b = await a.text()
-                let c = await JSON.parse(b)
-                alert(c.msg)
-                if (a.ok) {
-                    document.location.href='/i/login'
-                }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const modalElement = document.getElementById('modalLocal')
+        const modalBootstrap = new bootstrap.Modal(modalElement)
+
+        async function carregarLocais() {
+            const resposta = await fetch('/api/local/')
+            const dados = await resposta.json()
+
+            const tbody = document.getElementById('tabela-locais')
+            tbody.innerHTML = ''
+
+            dados.locais.forEach(local => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${local.id}</td>
+                        <td>${local.nome}</td>
+                        <td>${local.bloco}</td>
+                        <td>
+                            <button type="button" class="btn btn-success btn-sm" 
+                                onclick="abrirModalEditar(${local.id}, '${local.nome}', '${local.bloco}')">
+                                Atualizar
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm" 
+                                onclick="deletarLocal(${local.id})">
+                                Remover
+                            </button>
+                        </td>
+                    </tr>
+                `
             })
-            
-        </script>
+        }
+
+        function abrirModalCriar() {
+            document.getElementById('modal-titulo').innerText = 'Cadastrar Novo Local'
+            document.getElementById('local-id').value = ''
+            document.getElementById('input-nome').value = ''
+            document.getElementById('input-bloco').value = ''
+            modalBootstrap.show()
+        }
+
+        function abrirModalEditar(id, nome, bloco) {
+            document.getElementById('modal-titulo').innerText = 'Atualizar Local'
+            document.getElementById('local-id').value = id
+            document.getElementById('input-nome').value = nome
+            document.getElementById('input-bloco').value = bloco
+            modalBootstrap.show()
+        }
+
+        async function salvarLocal() {
+            const id = document.getElementById('local-id').value
+            const nome = document.getElementById('input-nome').value
+            const bloco = document.getElementById('input-bloco').value
+
+            if (!nome || !bloco) {
+                alert('Preencha o nome e o bloco!')
+                return
+            }
+
+            const url = id ? `/api/local/${id}` : '/api/local/'
+            const metodo = id ? 'PUT' : 'POST'
+
+            const resposta = await fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, bloco })
+            })
+
+            const dados = await resposta.json()
+            alert(dados.msg)
+
+            if (resposta.ok) {
+                modalBootstrap.hide()
+                carregarLocais()
+            }
+        }
+
+        async function deletarLocal(id) {
+            if (!confirm('Tem certeza que deseja remover este local?')) return
+
+            const resposta = await fetch(`/api/local/${id}`, {
+                method: 'DELETE'
+            })
+
+            const dados = await resposta.json()
+            alert(dados.msg)
+
+            if (resposta.ok) {
+                carregarLocais()
+            }
+        }
+
+        carregarLocais()
+
+        const btn = document.querySelector("#sair_btn")
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault()
+            let a = await fetch('/api/user/logout')
+            let b = await a.text()
+            let c = await JSON.parse(b)
+            alert(c.msg)
+            if (a.ok) {
+                document.location.href = '/i/login'
+            }
+        })
+    </script>
 </body>
 </html>
