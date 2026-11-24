@@ -21,6 +21,7 @@ async function AtualizarEtiqueta(id,marca,cor,material){
 }
 
 async function DeletarEtiqueta(id) {
+      await pool.execute('DELETE FROM etiquetaObjeto WHERE id_etiqueta = ?', [id])
     let [etiqueta] = await pool.execute('DELETE FROM etiqueta WHERE id = ?',[id])
     return etiqueta
 }
