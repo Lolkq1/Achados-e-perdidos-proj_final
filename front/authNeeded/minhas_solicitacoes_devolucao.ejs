@@ -13,9 +13,11 @@
             <nav class="bg-dark text-white p-3 min-vh-100" style="width: 250px;">
             <h4 class="mb-4">Achados e Perdidos</h4>
             <div class="nav flex-column">
-                <a class="nav-link text-white" href="/u/objeto">Objetos</a>
-                <a class="nav-link text-white" href="/u/local">Locais</a>
+                <a class="nav-link text-white" href="/u/objetos">Objetos</a>
+                <a class="nav-link text-white" href="/u/locais">Locais</a>
                 <a class="nav-link text-white bg-success rounded" href="/u/solicitacoes">Solicitações</a>
+                <a class="nav-link text-white" href="/u/etiquetas">Etiquetas</a>
+                <a class="nav-link text-white" href="/u/categorias">Categorias</a>
             </div>
         </nav>
         </div>
@@ -47,22 +49,27 @@
                     </tr>
                 </thead>
                 <tbody>
+                <% if (sols.length > 0) { %>
                    <% sols.forEach(sol => { %>
                     <tr> 
                         <td><%=sol.id %></td>
                         <td><%=sol.status %></td>
-                        <td><%=sol.data_perdido %></td>
-                        <td><%=sol.data_entrega %></td>
+                        <td><%=sol.data_perdido.toLocaleString('PT-BR').split(',')[0]%></td>
+                        <td><%= sol.data_entrega ? new Date(sol.data_entrega).toLocaleDateString('pt-BR') : 'Indefinido' %></td>
                         <td><%=sol.email_entregador %></td>
                         <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target='#modal<%=sol.id %>'>Expandir</button></td>
                         <td> <button class="btn btn-danger" onclick="fetch('/api/solicitacao/<%=sol.id %>', {method: 'DELETE'}).then(res => res.text()).then(obj => JSON.parse(obj)).then(obj2 => {alert(obj2.msg); window.location.reload()})">Remover</button> </td>
                    </tr>
                    <% }) %>
+                   <% } %>
                 </tbody>
             </table>
+            <% if (sols.length > 0) { %>
             <button class="btn btn-secondary" style="position: absolute; top: 67%; left: 14.2%;" onclick="document.location.href='/u/solicitacoes/<%=sols[0].id_usuario %>?pag=<%=pag-1 %>'"><</button>
             <button class="btn btn-secondary" style="position: absolute; top: 67%; left: 17%;" onclick="document.location.href='/u/solicitacoes/<%=sols[0].id_usuario %>?pag=<%=pag+1 %>'">></button>
+            <% } %>
         </div>
+        <% if (sols.length > 0) { %>
         <% sols.forEach((sol) => { %>
             <div class="modal fade" id='modal<%=sol.id %>' tabindex="-1">
             <div class="modal-dialog">
@@ -83,6 +90,7 @@
             </div>
             </div>
     <% }) %>
+    <% } %>
             
         </div>
     </div>

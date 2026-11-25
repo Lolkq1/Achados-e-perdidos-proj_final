@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAR NÃO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
+    <link rel="stylesheet" href="../style2.css"> 
+    <script src="etiqueta.js" defer></script>
+</head>
+<body>
+    <div class="d-flex">
+        <div>
+            <nav class="bg-dark text-white p-3 min-vh-100" style="width: 250px;">
+            <h4 class="mb-4">Achados e Perdidos</h4>
+            <div class="nav flex-column">
+                <a class="nav-link text-white" href="/u/objetos">Objetos</a>
+                <a class="nav-link text-white bg-success rounded" href="/u/locais">Locais</a>
+                <a class="nav-link text-white " href="/u/solicitacoes">Solicitações</a>
+                <a class="nav-link text-white" href="/u/etiquetas">Etiquetas</a>
+                <a class="nav-link text-white" href="/u/categorias">Categorias</a>
+            </div>
+        </nav>
+        </div>
+        <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light min-vw-100" style="height: 50px;">
+            <div class="collapse navbar-collapse" style="position: relative; left: 70%;">
+                <div class="navbar-nav">
+                    <a href="" class="nav-item nav-link disabled"><%=usuario%></a>
+                    <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
+                </div>
+            </div>
+        </nav>
+        <form action="/solicitacao" method="post" class="main2">
+        <h1 class="m-3" id="main-title">Nova etiqueta</h1>
+        <div class="form-group mx-3 my-3">
+            <label class="my-2" for="marca" style="display: block;">Marca</label>
+            <input type="text" id="marca" class="form-control">
+            <label class="my-2" for="cor" style="display: block;">Cor</label>
+            <input type="text" id="cor" class="form-control">
+            <label class="my-2" for="material" style="display: block;">Material</label>
+            <input type="text" id="material" class="form-control">
+        </div>
+        <div class="form-group mx-3 my-3">
+            <button class="btn btn-success my-3" id="btn">Salvar</button>
+            <button class="btn btn-primary my-3" id="btn_voltar" onclick="document.location.href='/u/locais'">
+                Voltar
+            </button> 
+        </div>
+    </form>
+    </div>
+    </div>
+    <script>          
+            const btn = document.querySelector("#sair_btn")
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault()
+                let a = await fetch('/api/user/logout')
+                let b = await a.text()
+                let c = await JSON.parse(b)
+                alert(c.msg)
+                if (a.ok) {
+                    document.location.href='/i/login'
+                }
+            })
+            
+        </script>
+</body>
+</html>

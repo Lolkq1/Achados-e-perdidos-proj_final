@@ -13,10 +13,6 @@ bloco.addEventListener('change', async (e) => {
     let b = await a.text()
     let c = await JSON.parse(b)
     local.innerHTML = ''
-    let optdefault = document.createElement('option')
-        optdefault.value="nulo"
-        optdefault.textContent="Não tenho certeza..."
-        local.appendChild(optdefault)
         local.disabled = false
     for (let x of c.locais) {
         let opt = document.createElement('option')

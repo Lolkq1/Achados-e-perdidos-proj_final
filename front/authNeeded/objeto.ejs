@@ -6,6 +6,7 @@
     <link rel = "stylesheet" href = "../style.css">
     <title>Cadastro de Objetos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="objeto.js" defer></script>
 </head>
 <body>
     <div class="d-flex">
@@ -13,9 +14,11 @@
          <nav class="bg-dark text-white p-3 min-vh-100" style="width: 250px;">
             <h4 class="mb-4">Achados e Perdidos</h4>
             <div class="nav flex-column">
-                <a class="nav-link text-white bg-success rounded" href="/u/objeto">Objetos</a>
-                <a class="nav-link text-white" href="/u/local">Locais</a>
+                <a class="nav-link text-white bg-success rounded" href="/u/objetos">Objetos</a>
+                <a class="nav-link text-white" href="/u/locais">Locais</a>
                 <a class="nav-link text-white" href="/u/solicitacoes">Solicitações</a>
+                <a class="nav-link text-white" href="/u/etiquetas">Etiquetas</a>
+                <a class="nav-link text-white" href="/u/categorias">Categorias</a>
             </div>
         </nav>
     </div>
@@ -25,7 +28,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light min-vw-100" style="height: 50px;">
             <div class="collapse navbar-collapse" style="position: relative; left: 70%;">
                 <div class="navbar-nav">
-                    <a href="" class="nav-item nav-link disabled">joaozinhodobiu123@gmail.com</a>
+                    <a href="" class="nav-item nav-link disabled"><%=usuario %>></a>
                     <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
                 </div>
             </div>
@@ -37,17 +40,11 @@
         <form>
            <h3>Informações do Objeto</h3>
             <div class="form-group my-2">
-                <label for ="titulo">Titulo (Nome do Item)</label>
-                <input class="form-control" type ="text" id ="titulo" name ="titulo" placeholder="Digite o nome do objeto">
-            </div>
-            <div class="form-group my-2">
                 <label for = "categoria">Categoria</label>
                 <select class="form-select" id ="categoria" name ="categoria">
-                    <option value = "eletronica">Eletrônica</option>  
-                    <option value = "chaves">Chaves</option>  
-                    <option value = "documentos">Documentos</option>  
-                    <option value = "roupas">Roupas</option>  
-                    <option value = "outros">Outros</option>  
+                    <% for (let categ of categorias) { %>
+                        <option value="<%=categ.id%>"><%=categ.nome%></option>
+                    <% } %>
                 </select>
             </div>
             <div class="form-group my-2">
@@ -55,11 +52,25 @@
             <div class = "row">
                 <div class = "column">
                     <label for ="data">Data do Ocorrido</label>
-                    <input type ="datetime-local" id = "data" name ="data">
+                    <input type="date" id ="data" name ="data">
+                    <label for="turno" class="my-2">Turno</label>
+                    <select class="form-select" name="turno" id="turno">
+                        <option value="matutino">Matutino</option>
+                        <option value="vespertino">Vespertino</option>
+                    </select>
             </div>
-                <div class = "column">
-                    <label for ="local">Local onde foi encontrado</label>
-                    <input class="form-control" type ="text" id ="local" name ="local" placeholder="Descreva o local">
+                <div class = "linha">
+                    <label for ="bloco">Bloco onde foi encontrado</label>
+                    <select class="form-select" id="bloco">
+                        <option value="placeholder">Selecione o bloco.</option>
+                        <% for (let blo of blocos) { %>
+                            <option value="<%=blo.bloco%>"><%=blo.bloco%></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class = "linha">
+                    <label for ="local">Local</label>
+                    <select class="form-select" id="local" disabled></select>
                 </div>
             </div>
             </div>
@@ -67,22 +78,35 @@
             <div class = "divEtqMae">
             <div class = "Etq">
                 <label for ="cor">Cor</label>
-                <input class="form-control" type = "text" id ="cor" name ="cor" placeholder="Ex: Preto, Azul, Vermelho">
+                <select name="etiquetacor" id="EtqCor" class="form-select">
+                    <% for (let x of etiquetas.cor) { %>
+                        <option value="<%=x.id%>"><%=x.cor %></option>
+                    <% } %>
+                </select>
             </div>
             <div class = "Etq">
                  <label for ="marca">Marca</label>
-                <input type = "text" class="form-control" id ="marca" name ="marca" placeholder="Ex: Nike, Samsung">
+                <select name="etiquetamar" id="EtqMarca" class="form-select">
+                    <% for (let x of etiquetas.marca) { %>
+                        <option value="<%=x.id %>"><%=x.marca %></option>
+                    <% } %>
+                </select>
             </div>
             <div class = "Etq">
                  <label for ="material">Material</label>
-                <input class="form-control" type = "text" id ="material" name ="material" placeholder="Ex: Plástico">
+                <select name="etiquetamat" id="EtqMaterial" class="form-select">
+                    <% for (let x of etiquetas.material) { %>
+                        <option value="<%=x.id %>"><%=x.material %></option>
+                    <% } %>
+                </select>
             </div>
             </div>
             <div class = "descriçao">
                 <label for ="descricao">Descrição Detalhada</label>
-                <textarea id ="descricao" name="descricao" rows="4" cols="30"></textarea>
+                <textarea id ="descricao" style="border: 1px solid black; border-radius: 5px;" name="descricao" rows="4" cols="30"></textarea>
             </div>
-            <button type ="submit" class = "btn btn-success">Cadastrar</button>
+            <button type ="submit" class = "btn btn-success" id="btn">Cadastrar</button>
+            <button class="btn btn-primary mx-2" id="btn_voltar">Voltar</button>
         </form>
     </div>
         </div>

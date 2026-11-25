@@ -1,4 +1,6 @@
-const {deleteSolicitacao, alterarStatusSolicitacao, insertSolicitacao, getSolicitacaoById, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoesByUserId, getSolicitacoes} = require('../models/SolicitacaoModel.js')
+const { getAllBlocos, getLocaisByBloco } = require('../models/LocalModel.js')
+const {deleteSolicitacao, modSolicitacao, alterarStatusSolicitacao, insertSolicitacao, getSolicitacaoById, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoesByUserId, getSolicitacoes, getDetailedSolicitacao} = require('../models/SolicitacaoModel.js')
+const { getUserByEmail } = require('../models/UserModel.js')
 
 async function cadastrarSolicitacao(req, res) {
     let {turno, descricao, local, date} = req.body
@@ -18,30 +20,34 @@ async function getSolicitacoesENTREGADOR() {
 }
 
 async function alterarSolicitacao(req, res) {
-    let {coluna, valor} = req.body
     try {
+        if (!req.params.id) {
+            return res.status(422).json({msg: 'id não informado.'})
+        }
+        let {descricao_solicitante, data_perdido, status, id_local, turno, data_entrega, responsavel_entrega} = req.body
         let id = parseInt(req.params.id)
-        if (res.locals.user.tipo !== 'admin') {
+        
+        if (res.locals.user.tipo !== 'administrador') {
             return res.status(403).json({msg: 'não autorizado.'})
         }
-        switch(coluna) {
-                case 'responsavel_entrega':
-                    await setEntregadorSolicitacao(id, valor)
-                    break
-                case 'status':
-                    await alterarStatusSolicitacao(id, valor)
-                    break;
-                case 'objeto':
-                    await setObjetoSolicitacao(id, valor)
-                    break;
-                default:
-                    throw new Error("alteração inválida.", {cause: 422})
-                }
+        if (responsavel_entrega) {
+            let resp = await getUserByEmail(responsavel_entrega)
+            if (resp.tipo !== 'entregador') {
+                return res.status(422).json({msg: 'O e-mail inserido não pertence a uma conta de um entregador.'})
+            }
+            responsavel_entrega = resp.id
+        } else {
+            responsavel_entrega = null
+        }
+        if (!data_entrega) {
+            data_entrega = null
+        }
+        await modSolicitacao(id, descricao_solicitante, data_perdido, status, id_local, turno, data_entrega, responsavel_entrega)
         return res.json({msg: 'Alteração concluida com sucesso!'})
     } catch(err) {
-        return res.status(err.cause).json({msg: err.cause})
+        return res.status(err.cause || 500).json({msg: err.message})
     }
-} 
+}
 
 async function getSolicitacao(req, res) {
     try {   
@@ -103,7 +109,14 @@ async function dynamicSolicitacoes(req, res) {
         }
         let uid = parseInt(req.params.uid)
         let pag = parseInt(req.query.pag)
-        console.log(pag)
+        if (res.locals.user.tipo === 'administrador') {
+            let sols = await getSolicitacoes(7, 'DESC', pag)
+            return res.render('authNeeded/solicitacoes_devolucao_adm.ejs', {
+                sols: sols,
+                pag: pag,
+                usuario: res.locals.user.email 
+            })
+        }
         let sols = await getSolicitacoesByUserId(uid, 7, 'DESC', pag)
         if (sols.length === 0 && pag !== 1 || pag < 0 || pag === 0 || isNaN(pag)) {
             return res.redirect('/u/solicitacoes')
@@ -114,9 +127,39 @@ async function dynamicSolicitacoes(req, res) {
             usuario: res.locals.user.email
         })
     } catch(err) {
-            console.log(err)
             return res.redirect(`/u/inicial`)
     }
 }
 
-module.exports = {getSolicitacao, alterarSolicitacao, cadastrarSolicitacao, getSolicitacoesByUser, getSolicitacoes, dynamicSolicitacoes, removerSolicitacao}
+async function dynamicSolicitacaoEditar(req, res) {
+    try {
+        if (!req.params.id || isNaN(parseInt(req.params.id))) {
+            return res.status(422).json({msg:'kd o id but'})
+        }
+        let id = parseInt(req.params.id)
+        console.log(id)
+        let sol = await getDetailedSolicitacao(id)
+        let blocos = await getAllBlocos()
+        console.log(sol)
+        let [dia, mes, ano] = sol.sol_data_perdido.toLocaleString('PT-BR').split(',')[0].split('/')
+        if (sol.sol_data_entrega) {
+            let [dia, mes, ano] = sol.sol_data_entrega.toLocaleString('PT-BR').split(',')[0].split('/')
+            let datnovo = `${ano}-${mes}-${dia}`
+            sol.sol_data_entrega = datnovo
+        }
+        let datnovo = `${ano}-${mes}-${dia}`
+        sol.sol_data_perdido = datnovo 
+        let locaisInit = await getLocaisByBloco(sol.sol_bloco)
+        return res.render('authNeeded/solicitacao_edit.ejs', {
+            sol: sol,
+            blocos: blocos,
+            locaisInit: locaisInit,
+            usuario: res.locals.user.email
+        })
+    } catch(err) {
+        console.log(err)
+        return res.status(err.cause).json({msg: err.message})
+    }
+}
+
+module.exports = {getSolicitacao, alterarSolicitacao, cadastrarSolicitacao, getSolicitacoesByUser, getSolicitacoes, dynamicSolicitacoes, removerSolicitacao, dynamicSolicitacaoEditar}

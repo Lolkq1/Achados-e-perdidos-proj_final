@@ -37,12 +37,42 @@ async function getUserById(id) {
         } 
         return user[0]
     } catch (err) {
-        throw new Error("Erro interno do servidor", {cause: 500})
+        throw err
+    }
+}
+
+async function getUsers(tipo) {
+    try {
+        if (!tipo) {
+            let [users] = await pool.execute('SELECT * FROM usuario')
+            if (users.length === 0) {
+                throw new Error('não há usuário registrado.',{cause: 404})
+            }
+            return users;
+        }
+        let [users] = await pool.execute('SELECT * FROM usuario WHERE tipo=?', [tipo])
+        if (users.length === 0) {
+                throw new Error('não há usuário registrado.',{cause: 404})
+        }
+        return users;
+    } catch(err) {
+        throw err
+    }
+    
+}
+
+async function updateUser(id, nome, email, senha, tipo) {
+    try {
+        await pool.execute('UPDATE usuario SET nome=?, email=?, senha=?, tipo=? WHERE id=?', [nome, email, senha, tipo, id])
+    } catch(err) {
+        throw new Error("erro interno do servidor", {cause: 500})
     }
 }
 
 module.exports = {
     insertUser,
     getUserByEmail,
-    getUserById
+    getUserById,
+    getUsers,
+    updateUser
 }

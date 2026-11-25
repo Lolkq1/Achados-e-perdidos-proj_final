@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAR NÃO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style2.css"> 
+    <script src="/authNeeded/solicitacao_editt.js" defer></script>
+</head>
+<body>
+    <div class="d-flex">
+        <div>
+            <nav class="bg-dark text-white p-3 min-vh-100" style="width: 250px;">
+            <h4 class="mb-4">Achados e Perdidos</h4>
+            <div class="nav flex-column">
+                <a class="nav-link text-white" href="/u/objetos">Objetos</a>
+                <a class="nav-link text-white" href="/u/locais">Locais</a>
+                <a class="nav-link text-white bg-success rounded" href="/u/solicitacoes">Solicitações</a>
+                <a class="nav-link text-white" href="/u/etiquetas">Etiquetas</a>
+                <a class="nav-link text-white" href="/u/categorias">Categorias</a>
+            </div>
+        </nav>
+        </div>
+        <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light min-vw-100" style="height: 50px;">
+            <div class="collapse navbar-collapse" style="position: relative; left: 70%;">
+                <div class="navbar-nav">
+                    <a href="" class="nav-item nav-link disabled"><%=usuario%>></a>
+                    <a href="" class="nav-item nav-link" id="sair_btn">Sair</a>
+                </div>
+            </div>
+        </nav>
+        <form action="/solicitacao" method="post" class="main2">
+        <h1 class="m-3" id="main-title">Solicitação de devolução.</h1>
+        <div class="form-group mx-3 my-3">
+            <label class="my-2" for="turno" style="display: block;">Turno</label>
+            <select class="form-select" name="turno" id="turno" style="width: 90%;">
+                <option value="matutino" <%=sol.sol_turno === 'Matutino' ? 'selected' : ''%>>Matutino</option>
+                <option value="vespertino" <%=sol.sol_turno === 'Vespertino' ? 'selected' : ''%>>Vespertino</option>
+            </select>
+            <div class = "linha">
+                    <label for ="bloco">Bloco onde foi encontrado</label>
+                    <select class="form-select" id="bloco" name="bloco">
+                        <option value="placeholder">Selecione o bloco.</option>
+                        <% for (let blo of blocos) { %>
+                            <option value="<%= blo.bloco %>" <%= sol.sol_bloco === blo.bloco ? 'selected' : '' %>>
+                                <%= blo.bloco %>
+                            </option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class = "linha">
+                    <label for ="local">Local</label>
+                    <select class="form-select" id="local" name="local">
+                        <option value="placeholder">Selecione o local...</option>
+                        <% for (let x of locaisInit) { %>
+                            <option value="<%= x.id %>" <%= Number(sol.sol_local) === Number(x.id) ? 'selected' : '' %>>
+                                <%= x.nome %>
+                            </option>
+                        <% } %>
+                    </select>
+                </div>
+            <label for="date" class="my-2" style="display: block;">Data que foi perdido</label>
+            <input type="date" id="data_perdido" name="date" value="<%= sol.sol_data_perdido || '' %>">
+            
+            <label for="data_entrega" class="my-2" style="display: block;">Data de Entrega</label>
+            <input type="date" id="data_entrega" name="data_entrega" value="<%= sol.sol_data_entrega || '' %>">
+
+            <label for="status" class="my-2" style="display: block;">Status</label>
+            <select class="form-select" id="status" name="status">
+                <option value="Sob análise" <%= sol.sol_status === 'Sob análise' ? 'selected' : '' %>>Sob análise</option>
+                <option value="Aprovada" <%= sol.sol_status === 'Aprovada' ? 'selected' : '' %>>Aprovada</option>
+                <option value="Rejeitada" <%= sol.sol_status === 'Rejeitada' ? 'selected' : '' %>>Rejeitada</option>
+            </select>
+        </div>
+        <div class="my-2">
+            <label for="entregador" class="mx-3" style="display: block;">E-mail do entregador:</label>
+            <input type="email" id="entregador" class="form-control mx-3" value="<%=sol.sol_responsavel_entrega%>">
+        </div>
+        <div class="form-group mx-3 my-3">
+            <label class="my-2" for="descricao" style="display: block;">Descrição do objeto</label>
+            <textarea id="descricao" name="descricao" style="display: block; width: 90%; height: 200px;"><%= (typeof sol !== 'undefined' && (sol.sol_descricao_solicitante || sol.sol_descricao)) || '' %></textarea>
+            <button class="btn btn-success my-3" id="btn">Salvar</button>
+            <button class="btn btn-primary my-3" id="btn_voltar" onclick="document.location.href='/u/solicitacoes'">
+                Voltar
+            </button> 
+        </div>
+    </form>
+    </div>
+    </div>
+    <script>          
+            const btn = document.querySelector("#sair_btn")
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault()
+                let a = await fetch('/api/user/logout')
+                let b = await a.text()
+                let c = await JSON.parse(b)
+                alert(c.msg)
+                if (a.ok) {
+                    document.location.href='/i/login'
+                }
+            })
+            
+        </script>
+</body>
+</html>

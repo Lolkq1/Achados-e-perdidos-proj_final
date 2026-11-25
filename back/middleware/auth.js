@@ -9,7 +9,6 @@ async function auth(req, res, next) {
         let user = await model.getUserById(parseInt(ver.sub))
 
         res.locals.user = user
-        console.log(user)
         return next()
     } catch(err) {
         console.log(err)
