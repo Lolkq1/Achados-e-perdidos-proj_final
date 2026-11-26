@@ -5,36 +5,38 @@ btn.addEventListener("click", async (e) => {
     const nome_inp = document.querySelector("#nome")
     const senha_inp = document.querySelector("#senha")
     const tipo_inp = document.querySelector("#tipo")
+
     let a = await fetch("/api/user/signup", {
-        method:"POST",
+        method: "POST",
         body: JSON.stringify({
-          nome: nome_inp.value,
-          senha: senha_inp.value,
-          email: email_inp.value,
-          tipo: tipo_inp.value
+            nome: nome_inp.value,
+            senha: senha_inp.value,
+            email: email_inp.value,
+            tipo: tipo_inp && tipo_inp.value ? tipo_inp.value : "comum"
         }),
         headers: {
-            'content-type':'application/json'
+            'content-type': 'application/json'
         }
     })
+
     let b = await a.text()
-    let c = await JSON.parse(b)
+    let c = JSON.parse(b)
     alert(c.msg)
-    e.preventDefault()
-        if (a.ok) {
-            switch(c.tipo) {
-                    case 'comum':
-                        document.location.href='u/inicial'
-                        break;
-                    case 'admin':
-                        document.location.href='u/painel_admin'
-                        break;
-                    case 'entregador': 
-                        document.location.href='u/painel_entregador'
-                        break;
-                    default: 
-                        document.location.href='u/inicial'
-                        break;
-                    }
-                }
+
+    if (a.ok) {
+        switch (c.tipo) {
+            case 'comum':
+                document.location.href = '/u/inicial'
+                break;
+            case 'administrador':
+                document.location.href = '/u/painel_admin'
+                break;
+            case 'entregador':
+                document.location.href = '/u/painel_entregador'
+                break;
+            default:
+                document.location.href = '/u/inicial'
+                break;
+        }
+    }
 })

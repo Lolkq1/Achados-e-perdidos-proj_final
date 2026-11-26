@@ -1,4 +1,4 @@
-const pool = require('../../ehbrinksnepo/Achados-e-perdidos-proj_final/back/db')
+const pool = require('../db')
 
 async function CriarEtiqueta(marca,cor,material) {
     try {

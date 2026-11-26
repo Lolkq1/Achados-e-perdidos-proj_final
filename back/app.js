@@ -31,7 +31,7 @@ app.use('/api/categoria/', auth, categoriarouter)
 app.use('/u/', auth, dSR, dLR, dOR, dCR, dEr)
 
 app.use('/u/', auth, express.static('../front/authNeeded/', {
-    extensions: ['html','js']
+    extensions: ['html', 'js']
 }))
 app.use('/i/', reverseAuth, express.static('../front/noAuthNeeded/', {
     extensions: ['html', 'js']
@@ -39,7 +39,6 @@ app.use('/i/', reverseAuth, express.static('../front/noAuthNeeded/', {
 app.use(express.static('../front/', {
     extensions: ['html', 'png', 'css']
 }))
-
 
 app.listen(8080, () => {
     console.log("servido rodando em 8080")
