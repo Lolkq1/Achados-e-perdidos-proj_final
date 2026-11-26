@@ -52,7 +52,7 @@ async function getUsers(tipo) {
         }
         let [users] = await pool.execute('SELECT * FROM usuario WHERE tipo=?', [tipo])
         if (users.length === 0) {
-                throw new Error('não há usuário registrado.',{cause: 404})
+                throw new Error('não há usuário desse tipo registrado.',{cause: 404})
         }
         return users;
     } catch(err) {
@@ -61,11 +61,38 @@ async function getUsers(tipo) {
     
 }
 
-async function updateUser(id, nome, email, senha, tipo) {
+async function getUsersDynamic(pag, ordem, limit, tipo) {
     try {
-        await pool.execute('UPDATE usuario SET nome=?, email=?, senha=?, tipo=? WHERE id=?', [nome, email, senha, tipo, id])
+        if (!tipo) {
+            let [users] = await pool.execute(`SELECT * FROM usuario ORDER BY id ${ordem} LIMIT ? OFFSET ?`, [limit, (pag-1)*limit])
+            if (users.length === 0) {
+                throw new Error('não há usuário registrado.',{cause: 404})
+            }
+            return users;
+        }
+        let [users] = await pool.execute(`SELECT * FROM usuario WHERE tipo=? ORDER BY id ${ordem} LIMIT ? OFFSET ?`, [tipo, limit, (pag-1)*limit])
+        if (users.length === 0) {
+                throw new Error('não há usuário desse tipo registrado.',{cause: 404})
+        }
+        return users
+    } catch(err) {
+        throw err;
+    }
+}
+
+async function updateUser(id, nome, email, tipo) {
+    try {
+        await pool.execute('UPDATE usuario SET nome=?, email=?, tipo=? WHERE id=?', [nome, email, tipo, id])
     } catch(err) {
         throw new Error("erro interno do servidor", {cause: 500})
+    }
+}
+
+async function apagarUser(id) {
+    try {
+        await pool.execute('DELETE FROM usuario WHERE id=?', [id]) 
+    } catch(err) {
+        throw new Error('erro interno do servidor', {cause: 500})
     }
 }
 
@@ -74,5 +101,7 @@ module.exports = {
     getUserByEmail,
     getUserById,
     getUsers,
-    updateUser
+    updateUser,
+    apagarUser,
+    getUsersDynamic
 }

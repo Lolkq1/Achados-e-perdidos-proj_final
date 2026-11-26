@@ -13,6 +13,7 @@ let dLR = require('./routes/dynamicLocalRouter')
 let dOR = require('./routes/dynamicObjetoRouter')
 let dCR = require('./routes/dynamicCategoriaRouter')
 let dEr = require('./routes/dynamicEtiquetaRouter')
+let dUr = require('./routes/dynamicUserRouter')
 let {auth, reverseAuth} = require('./middleware/auth')
 const path = require('path')
 
@@ -28,7 +29,7 @@ app.use('/api/objeto/', auth, objetorouter)
 app.use('/api/etiqueta/', auth, etiquerarouter)
 app.use('/api/categoria/', auth, categoriarouter)
 
-app.use('/u/', auth, dSR, dLR, dOR, dCR, dEr)
+app.use('/u/', auth, dSR, dLR, dOR, dCR, dEr, dUr)
 
 app.use('/u/', auth, express.static('../front/authNeeded/', {
     extensions: ['html','js']

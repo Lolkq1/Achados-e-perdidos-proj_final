@@ -116,6 +116,7 @@ async function getSolicitacoes(limit, ordem, pag) {
         let [sols] = await pool.execute(`select s.*, u.email as email_solicitante, e.email as email_entregador from solicitacao 
             as s JOIN usuario as u ON s.id_usuario = u.id LEFT JOIN usuario as e ON s.responsavel_entrega=e.id ORDER BY s.id ${ordem} limit ? 
             offset ?`, [limit, (pag-1)*limit])
+            console.log(sols)
         return sols
     } catch (err) {
         console.log(err)
@@ -128,7 +129,7 @@ async function getDetailedSolicitacao(id) {
         console.log("id aki", id)
         let [sol] = await pool.execute(`select s.id as sol_id, s.status as sol_status, s.turno as sol_turno, s.data_entrega as sol_data_entrega, s.id_objeto as sol_id_objeto, s.id_usuario as sol_id_usuario, u.email as sol_responsavel_entrega, s.descricao_solicitante as sol_descricao, s.data_perdido as sol_data_perdido, s.id_local as sol_local, l.bloco as sol_bloco FROM solicitacao as s JOIN local as l ON s.id_local = l.id LEFT JOIN usuario as u ON s.responsavel_entrega = u.id WHERE s.id=?`,[id])
         if (sol.length === 0 ) {
-            return new Error('não encontrado', {cause: 404})
+            throw new Error('não encontrado', {cause: 404})
         }
         return sol[0]
     } catch(err) {
@@ -136,4 +137,13 @@ async function getDetailedSolicitacao(id) {
     }
 }
 
-module.exports = {deleteSolicitacao, modSolicitacao, alterarStatusSolicitacao, getSolicitacaoById, insertSolicitacao, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoes, getSolicitacoesByUserId, getDetailedSolicitacao}
+async function getEntregadorSolicitacoes(id, pag, ordem, limit) {
+    try {
+        let [sols] = await pool.execute('SELECT s.id as id, s.data_perdido as data_perdido ,s.data_entrega as data_entrega, o.id as id_objeto, u.email as email_solicitante, s.descricao_solicitante as descricao FROM solicitacao as s LEFT JOIN objeto as o ON s.id_objeto = o.id LEFT JOIN u ON s.id_usuario = u.id WHERE s.responsavel_entrega=? ORDER BY id '+ordem+' LIMIT ? OFFSET ?',[id, limit, (pag-1)*limit])
+        return sols
+    } catch(err) {
+        throw err
+    }
+}
+
+module.exports = {deleteSolicitacao, modSolicitacao, getEntregadorSolicitacoes, alterarStatusSolicitacao, getSolicitacaoById, insertSolicitacao, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoes, getSolicitacoesByUserId, getDetailedSolicitacao}

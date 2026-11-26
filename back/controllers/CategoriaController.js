@@ -36,8 +36,8 @@ async function dynamicCategoriaEditar(req, res) {
         }
         let id = req.params.id
         let cat = await mod.pegarCategoria(id)
-        return res.render("authNeeded/categoriaedit.ejs", {
-            Categoria: cat, 
+        return res.render("authNeeded/categoria_edit.ejs", {
+            cat: cat, 
             usuario: res.locals.user.email
         })
     } catch(err) {

@@ -51,11 +51,82 @@ async function signup(req, res) {
     }
 }
 
+async function dynamicUsers(req, res) {
+    try {
+        if (res.locals.user.tipo !== 'administrador') {
+            return res.redirect('/u/inicial')
+        }
+        if (!req.query.pag) {
+            return res.redirect('/u/usuarios?pag=1')
+        }
+        let pag = parseInt(req.query.pag)
+        let users = await model.getUsersDynamic(pag, 'DESC', 7, req.query.tipo)
+        return res.render('authNeeded/usuarios_registrados.ejs', {
+            usuario: res.locals.user.email,
+            pag: pag,
+            usuarios: users
+        })
+    } catch(err) {
+        return res.status(err.cause).json({msg: err.message})
+    }
+}
+
+async function dynamicUsersEdicao(req, res) {
+    try {
+        if (res.locals.user.tipo !== 'administrador') {
+            return res.redirect('/u/inicial')
+        }
+        if (!req.params.id) {
+            return res.redirect('/u/usuarios')
+        }
+        let user = await model.getUserById(req.params.id)
+        return res.render('authNeeded/usuario_edit.ejs', {
+            usuario: res.locals.user.email,
+            user: user
+        })
+    } catch(err) {
+        return res.status(err.cause).json({msg: err.message})
+    }
+}
+
+
 async function logout(req, res) {
     res.clearCookie("sessionToken")
     return res.json({msg: "Logout concluido!"})
 }
 
+async function deleteUser(req, res) {
+    try {
+        if (!req.params.id) {
+            return res.status(422).json({msg: "id nao informado"})
+        }
+        let id = parseInt(req.params.id)
+        await model.apagarUser(id)
+    } catch(err) {
+        return res.status(err.cause).json({msg: err.message})
+    }
+}
+
+async function putUser(req, res) {
+    try {
+        if (!req.params.id) {
+            return res.status(422).json({msg: "id nao informado"})
+        }
+        let id = parseInt(req.params.id)
+        let {nome, email, tipo} = req.body
+        if (!email) {
+            return res.status(422).json({msg: 'é obrigatório ter um email.'})
+        }
+        if (!nome) {
+            return res.status(422).json({msg: 'é obrigatório ter um nome.'})
+        }
+        await model.updateUser(id, nome, email, tipo)
+        return res.json({msg: 'usuário atualizado.'})
+    } catch(err) {
+        return res.status(err.cause).json({msg: err.message})
+    }
+}
+
 module.exports = {
-    signup, login, logout
+    signup, login, logout, dynamicUsers, dynamicUsersEdicao, deleteUser, putUser
 }

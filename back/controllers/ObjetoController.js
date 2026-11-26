@@ -15,20 +15,37 @@ async function dynamicObjetos(req, res) {
             if (objs.length === 0 && pag !== 1) {
                 return res.redirect('/u/objetos/')
             }
+            let blocos = await getAllBlocos()
+            let categorias = await getAllCategorias()
+            let etiquetasCor = await ListarEtiquetaCor()
+            let etiquetasMaterial = await ListarEtiquetaMarca()
+            let etiquetasMarca = await ListarEtiquetaMaterial()
             return res.render('authNeeded/objetos_registrados_user.ejs', {
                 objs: objs,
                 pag: pag,
-                usuario: res.locals.user.email
+                usuario: res.locals.user.email,
+                blocos: blocos,
+                categorias: categorias
             })
         }
         let objs = await getObjetos(7, 'DESC', pag)
         if (objs.length === 0 && pag !== 1) {
             return res.redirect('/u/objetos/') 
         }
+        let blocos = await getAllBlocos()
+            let categorias = await getAllCategorias()
+            let etiquetasCor = await ListarEtiquetaCor()
+            let etiquetasMaterial = await ListarEtiquetaMarca()
+            let etiquetasMarca = await ListarEtiquetaMaterial()
         return res.render('authNeeded/objetos_registrados.ejs', {
             objs: objs,
             pag: pag,
-            usuario: res.locals.user.email
+            blocos:blocos,
+            usuario: res.locals.user.email,
+            categorias: categorias,
+            etiquetasCor: etiquetasCor,
+            etiquetasMarca: etiquetasMarca,
+            etiquetasMaterial: etiquetasMaterial 
         })
     } catch(err) {
             console.log(err)

@@ -1,6 +1,6 @@
 let pool = require('../db')
 
-async function getAllCategorias(ordem, limit, pag) {
+async function getAllCategorias() {
     try {
         let [categorias] = await pool.execute(`SELECT * from categoria`);
         return categorias;

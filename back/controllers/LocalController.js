@@ -51,8 +51,11 @@ async function dynamicLocais(req, res) {
             return res.redirect('/u/locais?pag=1')
         }
         let pag = parseInt(req.query.pag)
+        if (pag < 0 || pag === 0 || isNaN(pag)) {
+            return res.redirect('/u/locais?pag=1')
+        }
         let locs = await getAllLocais(7, 'DESC', pag)
-        if (locs.length === 0 && pag !== 1 || pag < 0 || pag === 0 || isNaN(pag)) {
+        if (locs.length === 0 && pag !== 1) {
             return res.redirect('/u/locais?pag=1')
         }
         if (res.locals.user.tipo === 'administrador') {

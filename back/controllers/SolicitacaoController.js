@@ -1,5 +1,5 @@
 const { getAllBlocos, getLocaisByBloco } = require('../models/LocalModel.js')
-const {deleteSolicitacao, modSolicitacao, alterarStatusSolicitacao, insertSolicitacao, getSolicitacaoById, setEntregadorSolicitacao, setObjetoSolicitacao, getSolicitacoesByUserId, getSolicitacoes, getDetailedSolicitacao} = require('../models/SolicitacaoModel.js')
+const {deleteSolicitacao, modSolicitacao, alterarStatusSolicitacao, insertSolicitacao, getSolicitacaoById, setEntregadorSolicitacao, getEntregadorSolicitacoes, setObjetoSolicitacao, getSolicitacoesByUserId, getSolicitacoes, getDetailedSolicitacao, get} = require('../models/SolicitacaoModel.js')
 const { getUserByEmail } = require('../models/UserModel.js')
 
 async function cadastrarSolicitacao(req, res) {
@@ -17,6 +17,7 @@ async function cadastrarSolicitacao(req, res) {
 async function getSolicitacoesENTREGADOR() {
     //dps eu faço vou almoçar mas so pra eu lembrar da logica:
     //so preciso retornar todas as solicitacoes que estejam com status "Aprovada" e verificar se o usuário q ta pedindo é entregador
+    
 }
 
 async function alterarSolicitacao(req, res) {
@@ -52,7 +53,7 @@ async function alterarSolicitacao(req, res) {
 async function getSolicitacao(req, res) {
     try {   
     let sol = await getSolicitacaoById(req.params.id) 
-    if (res.locals.user.id !== sol.id_usuario && res.locals.user.tipo !== "admin") {
+    if (res.locals.user.id !== sol.id_usuario && res.locals.user.tipo !== "administrador") {
         return res.status(403).json({msg: 'Não autorizado.'})
     }
     return res.json({sol: sol})
@@ -66,7 +67,7 @@ async function getSolicitacoesByUser(req, res) {
     try {
         let uid = parseInt(req.params.uid)
         e=true 
-        if (res.locals.user.id !== uid && res.locals.user.tipo !== "admin") {
+        if (res.locals.user.id !== uid && res.locals.user.tipo !== "administrador") {
             return res.status(403).json({msg: 'Não autorizado.'})
         }
         let sols = await getSolicitacoesByUserId(uid)
@@ -87,7 +88,7 @@ async function removerSolicitacao(req, res) {
         } 
             let id = parseInt(req.params.id)
             let sol = await getSolicitacaoById(id)
-            if (sol.id_usuario !== res.locals.user.id) {
+            if (sol.id_usuario !== res.locals.user.id && res.locals.user.tipo !== 'administrador') {
                 return res.status(403).json({msg: 'Não autorizado.'})
             }
             await deleteSolicitacao(req.params.id)
@@ -109,16 +110,22 @@ async function dynamicSolicitacoes(req, res) {
         }
         let uid = parseInt(req.params.uid)
         let pag = parseInt(req.query.pag)
+        if (pag < 0 || pag === 0 || isNaN(pag)) {
+            return res.redirect('/u/solicitacoes')
+        }
         if (res.locals.user.tipo === 'administrador') {
             let sols = await getSolicitacoes(7, 'DESC', pag)
+            if (sols.length === 0 && pag !== 1 ) {
+                return res.redirect('/u/solicitacoes')
+            }
             return res.render('authNeeded/solicitacoes_devolucao_adm.ejs', {
                 sols: sols,
                 pag: pag,
-                usuario: res.locals.user.email 
+                usuario: {email: res.locals.user.email, uid: res.locals.user.id}
             })
         }
         let sols = await getSolicitacoesByUserId(uid, 7, 'DESC', pag)
-        if (sols.length === 0 && pag !== 1 || pag < 0 || pag === 0 || isNaN(pag)) {
+        if (sols.length === 0 && pag !== 1) {
             return res.redirect('/u/solicitacoes')
         }
         return res.render('authNeeded/minhas_solicitacoes_devolucao.ejs', {
@@ -128,6 +135,26 @@ async function dynamicSolicitacoes(req, res) {
         })
     } catch(err) {
             return res.redirect(`/u/inicial`)
+    }
+}
+
+async function dynamicSolicitacaoEntregas(req, res) {
+    try {
+        if (!req.params.pag) {
+            return res.redirect('/u/entregas?pag=1')
+        }
+        let pag = parseInt(req.params.pag)
+        if (pag < 0 || pag === 0 || isNaN(pag)) {
+            return res.redirect('/u/entregas')
+        }
+        let sols = await getEntregadorSolicitacoes(res.locals.user.id, pag, 'DESC', 7)
+        return res.render('authNeeded/entregas.ejs', {
+            sols: sols,
+            pag: pag
+        })
+    } catch(err) {
+        console.log(err)
+        return res.redirect('/u/painel_entregador')
     }
 }
 
@@ -162,4 +189,4 @@ async function dynamicSolicitacaoEditar(req, res) {
     }
 }
 
-module.exports = {getSolicitacao, alterarSolicitacao, cadastrarSolicitacao, getSolicitacoesByUser, getSolicitacoes, dynamicSolicitacoes, removerSolicitacao, dynamicSolicitacaoEditar}
+module.exports = {getSolicitacao, alterarSolicitacao, cadastrarSolicitacao, dynamicSolicitacaoEntregas, getSolicitacoesByUser, getSolicitacoes, dynamicSolicitacoes, removerSolicitacao, dynamicSolicitacaoEditar}

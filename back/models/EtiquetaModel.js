@@ -1,10 +1,12 @@
-const pool = require('../../ehbrinksnepo/Achados-e-perdidos-proj_final/back/db')
+const pool = require('../db')
 
 async function CriarEtiqueta(marca,cor,material) {
     try {
+        console.log(arguments)
         let [etiqueta] = await pool.execute('INSERT INTO etiqueta (marca, cor, material) VALUES (?,?,?)',[marca,cor,material])
         return etiqueta.insertId
     } catch(err) {
+        console.log(err)
         throw new Error("kratos_sheikmar3000",{cause: 500})
     }
 
@@ -82,7 +84,7 @@ async function AtualizarEtiqueta(id,marca,cor,material){
 async function DeletarEtiqueta(id) {
     try {
        let etiqueta = await pool.execute('DELETE FROM etiquetaObjeto WHERE id_etiqueta = ?', [id])
-       return Etiqueta
+       return etiqueta
     } catch(err) {
         throw new Error('erro interno do servidor', {cause: 500})
     }

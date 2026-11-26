@@ -1,4 +1,4 @@
-const pool = require('../../ehbrinksnepo/Achados-e-perdidos-proj_final/back/db')
+const pool = require('../db')
 
 async function CriarEtiquetaObjeto(id_etiqueta,id_objeto) {
     let [etiquetaObjeto] = await pool.execute('INSERT INTO etiquetaObjeto (id_etiqueta,id_objeto) VALUES (?,?)',[id_etiqueta,id_objeto])

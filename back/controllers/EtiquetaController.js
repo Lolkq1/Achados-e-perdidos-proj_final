@@ -38,8 +38,8 @@ async function dynamicEtiquetaEditar(req, res) {
         }
         let id = req.params.id
         let etq = await mod.ListarEtiquetaPorId(id)
-        return res.render("authNeeded/etiquetaedit.ejs", {
-            etiqueta: etq,
+        return res.render("authNeeded/etiqueta_edit.ejs", {
+            etq: etq,
             usuario: res.locals.user.email
         })
     } catch(err) {
@@ -51,7 +51,7 @@ async function dynamicEtiquetaEditar(req, res) {
 async function dynamicEtiquetaCriacao(req, res) {
     try {
         return res.render("authNeeded/etiqueta.ejs", {
-            usuario: res.locals.user.email
+            usuario: res.locals.user.email,
         })
     } catch(err) {
         throw new Error("kratos_sheikmar3000",{cause: 500})
@@ -113,20 +113,17 @@ async function putEtiqueta(req, res) {
    try {
      let {id} = req.params
     let {marca,cor,material} = req.body
-    if(!marca || !cor || !material){
-        return res.status(400).json({erro:"preencha todos os campos"})
-    }
+    
     let Etiqueta = await AtualizarEtiqueta(id,marca,cor,material)
 
     if(Etiqueta.affectedRows > 0){
-        return res.status(200).json({id,marca,cor,material})
+        return res.status(200).json({msg:"Etiqueta atualizada."})
     }else{
-        return res.status(404).json({erro: "etiqueta nao encontrada"})
+        return res.status(404).json({msg: "etiqueta nao encontrada"})
     }
-   
    } catch (erro) {
     console.error("erro ao atualizar etiqueta",erro)
-    return res.status(500).json({erro: "erro interno ao atualizar etiqueta"})
+    return res.status(500).json({msg: "erro interno ao atualizar etiqueta"})
    }
 }
 
@@ -142,21 +139,25 @@ async function deleteEtiqueta(req, res) {
 
     } catch (erro) {
         console.error("erro ao deletar etiqueta",erro)
-        return res.status(500).json({erro:"erro interno ao deletar etiqueta"})
+        return res.status(500).json({msg:"erro interno ao deletar etiqueta"})
     }
 }
 
 async function postEtiqueta(req, res) {
     try{
             let {marca,cor,material} = req.body
+            if (marca.length > 30) {
+                return res.status(422).json({msg: 'o nome da marca deve ter, no máximo, 30 caracteres.'})
+            }
+            if (cor.length > 15) {
+                return res.status(422).json({msg: 'o nome da cor deve ter, no máximo, 15 caracteres.'})
+            }
+            if (material.length > 20) {
+                return res.status(422).json({msg: 'o nome do material deve ter, no máximo, 20 caracteres.'})
+            }
             let EtiquetaCriada = await CriarEtiqueta(marca,cor,material)
             
-            return res.status(201).json({
-                id: EtiquetaCriada,
-                marca,
-                cor,
-                material,
-            });
+            return res.status(201).json({msg: 'Etiqueta criada!'});
         } catch(erro){
             console.error("erro ao cadastrar etiqueta",erro);
             return res.status(500).json({erro: "erro interno ao cadastrar etiqueta."})

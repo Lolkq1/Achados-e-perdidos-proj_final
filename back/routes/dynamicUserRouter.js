@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-let {dynamicUserEditar, dynamicUser} = require('../controllers/UserController')
-router.get('/users/:uid', dynamicUser)
-router.get('/users/', dynamicUser)
-router.get('/useredit/:id', dynamicUserEditar)
+let {dynamicUsersEdicao, dynamicUsers} = require('../controllers/UserController')
+router.get('/usuario/:uid', dynamicUsersEdicao)
+router.get('/usuarios/', dynamicUsers)
+router.get('/usuarioedit/:id', dynamicUsersEdicao)
 module.exports = router
